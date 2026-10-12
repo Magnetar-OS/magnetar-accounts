@@ -27,3 +27,4 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   opened. Without Online Accounts installed it does nothing.
 - An address already in the list, for the same provider, is not added a
   second time; the page says which account it already is.
+- Greek translation.

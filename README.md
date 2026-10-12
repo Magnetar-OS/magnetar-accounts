@@ -66,6 +66,8 @@ The tests start a private `dbus-daemon` with a stand-in Online Accounts
 daemon on it, so `dbus-daemon` must be installed; the session's own bus and
 accounts are never touched.
 
+Translations: English and Greek, in `i18n/`.
+
 ## Status
 
 New. What works: adding by password with a login check first, the browser
