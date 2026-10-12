@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Accounts
+Comment=Add your email, calendar and contacts accounts
+Exec=magnetar-accounts --first-run
+Icon=com.magnetaros.Accounts
+Terminal=false
+Type=Application
+NoDisplay=true
+OnlyShowIn=COSMIC;
+X-GNOME-Autostart-Phase=Applications

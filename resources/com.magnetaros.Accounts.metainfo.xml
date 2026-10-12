@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.magnetaros.Accounts</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>Accounts</name>
+  <summary>Sign in once, and mail, calendars and contacts follow</summary>
+  <developer id="com.magnetaros">
+    <name>entro314 labs</name>
+  </developer>
+  <description>
+    <p>
+      Accounts is where mail, calendar and contacts accounts are added on the
+      COSMIC desktop. Add one once, and Envelope, Slate and Circle all use it:
+      the mail in Envelope, the calendars in Slate, the contacts in Circle.
+    </p>
+    <p>
+      Type an address and it works out the rest — which provider it belongs
+      to, where its servers are, and how it signs in. A password is tried
+      before it is kept, so a mistyped one is caught here rather than later as
+      a sync error. Google and Microsoft sign in through the browser, with this
+      desktop's own registration or through GNOME Online Accounts.
+    </p>
+  </description>
+  <icon type="remote" width="64" height="64" scale="1">
+    https://github.com/Magnetar-OS/magnetar-accounts/raw/main/resources/icons/hicolor/scalable/apps/com.magnetaros.Accounts.svg
+  </icon>
+  <url type="homepage">https://github.com/Magnetar-OS/magnetar-accounts</url>
+  <url type="bugtracker">https://github.com/Magnetar-OS/magnetar-accounts/issues</url>
+  <url type="vcs-browser">https://github.com/Magnetar-OS/magnetar-accounts</url>
+  <launchable type="desktop-id">com.magnetaros.Accounts.desktop</launchable>
+  <provides>
+    <id>com.system76.CosmicApplication</id>
+    <binary>magnetar-accounts</binary>
+  </provides>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+  <categories>
+    <category>Settings</category>
+  </categories>
+  <keywords>
+    <keyword>accounts</keyword>
+    <keyword>email</keyword>
+    <keyword>calendar</keyword>
+    <keyword>contacts</keyword>
+  </keywords>
+  <content_rating type="oars-1.1" />
+  <branding>
+    <color type="primary" scheme_preference="light">#4fd1c5</color>
+    <color type="primary" scheme_preference="dark">#1f8a9e</color>
+  </branding>
+  <releases>
+    <release version="0.1.0" date="2026-09-30"> <!-- x-release-kit-version-date -->
+      <description>
+        <p>First release: adding accounts by address, by password, in the browser, and through GNOME Online Accounts.</p>
+      </description>
+    </release>
+  </releases>
+</component>

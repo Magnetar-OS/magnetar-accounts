@@ -1,0 +1,70 @@
+[package]
+name = "magnetar-accounts"
+version = "0.1.0"
+edition = "2024"
+# GPL-3.0-only for the application; the shared substrate (cosmic-pim) is
+# MPL-2.0 and is linked, not absorbed — the same split as Envelope, Slate and
+# Circle.
+license = "GPL-3.0-only"
+description = "Online accounts for the COSMIC desktop: sign in once, and mail, calendars and contacts follow"
+repository = "https://github.com/Magnetar-OS/magnetar-accounts"
+rust-version = "1.99.0"
+# An application, shipped through Magnetar packaging. It links libcosmic from
+# git, which crates.io refuses.
+publish = false
+
+[dependencies]
+# The substrate does the work: which provider an address belongs to, how it
+# signs in, trying a password before storing it, the browser sign-in, and
+# GNOME Online Accounts. This crate is the window over it.
+cosmic-pim-accounts = "3"
+cosmic-pim-auth = "3"
+# With its default `mail` feature: autodiscovery and trying a mail login are
+# the heart of adding an account, and this is the one application that does
+# it for the whole suite — which is what keeps the mail stack out of Slate
+# and Circle.
+cosmic-pim-sync = "3"
+
+i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
+i18n-embed-fl = "0.10"
+rust-embed = "8.12"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+open = "5.4.4"
+# The single-instance hand-over is a string; what a second launch asks for is
+# serialised as JSON, as Slate and Circle do it.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# `spawn_blocking`, for the substrate's blocking calls. Already in the graph
+# through libcosmic's executor.
+tokio = { version = "1.53", features = ["rt"] }
+
+[dependencies.libcosmic]
+git = "https://github.com/pop-os/libcosmic.git"
+features = [
+    "about",
+    # One window: a second `magnetar-accounts --add` from an application's
+    # first-run page raises the one already open, on the add page.
+    "single-instance",
+    "wgpu",
+    "xdg-portal",
+]
+
+[dev-dependencies]
+tempfile = "3"
+# The stand-in GNOME Online Accounts daemon the tests put on a private bus.
+# Already in the graph through cosmic-pim-auth and libcosmic, with these
+# features.
+zbus = { version = "5.19", features = ["blocking-api"] }
+
+[[bin]]
+name = "magnetar-accounts"
+path = "src/main.rs"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }

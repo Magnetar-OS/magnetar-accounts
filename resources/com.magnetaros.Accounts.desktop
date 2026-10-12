@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Accounts
+GenericName=Online Accounts
+Comment=Sign in once, and mail, calendars and contacts follow
+Categories=COSMIC;Settings;DesktopSettings;
+Exec=magnetar-accounts
+Icon=com.magnetaros.Accounts
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=com.magnetaros.Accounts
+Keywords=accounts;online accounts;sign in;login;email;mail;calendar;contacts;google;gmail;microsoft;outlook;fastmail;proton;yahoo;icloud;
+Actions=add;
+# Deliberately NOT DBusActivatable, for the reason spelled out in Slate's and
+# Circle's desktop entries: libcosmic's run_single_instance serves
+# org.freedesktop.DbusActivation rather than org.freedesktop.Application, so
+# GIO's activation call would fail silently. The Exec line reaches the same
+# place, and a second launch hands its request to the window already open.
+
+[Desktop Action add]
+Name=Add Account
+Exec=magnetar-accounts --add
