@@ -1,0 +1,5 @@
+{
+  "versionFiles": ["Cargo.toml", "Cargo.lock", "resources/com.magnetaros.Accounts.metainfo.xml"],
+  "publish": null,
+  "steps": ["version", "changelog", "tag", "push"]
+}

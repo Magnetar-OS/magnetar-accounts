@@ -1,0 +1,6 @@
+/target
+/vendor
+/vendor.tar
+/.cargo
+# The release workflow stages the install tree here.
+/.release-kit
