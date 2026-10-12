@@ -66,3 +66,4 @@ rejected = The password was not accepted.
 rejected-with-hint = The password was not accepted. { $hint }
 unreachable = The server could not be reached: { $reason }
 no-server = No mail server could be found for this address. Check the address, or add the account in Envelope, where the servers can be typed in.
+already-added = This address is already in the list, as { $name }.

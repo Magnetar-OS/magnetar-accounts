@@ -144,6 +144,9 @@ pub enum AddFailure {
     Rejected,
     Unreachable(String),
     NoServer,
+    /// The list already has an account for this address and provider: the
+    /// one it is listed as.
+    Exists(String),
     Other(String),
 }
 
@@ -291,6 +294,7 @@ impl AppModel {
             move || {
                 let mut store = AccountStore::open_default()
                     .map_err(|why| AddFailure::Other(why.to_string()))?;
+                refuse_a_second(&store, &plan)?;
                 let id = setup::add_with_password(&mut store, &registry, &plan, &name, &password)?;
                 Ok(added(&store, &id))
             },
@@ -315,6 +319,7 @@ impl AppModel {
             move || {
                 let mut store = AccountStore::open_default()
                     .map_err(|why| AddFailure::Other(why.to_string()))?;
+                refuse_a_second(&store, &plan)?;
                 // The user's own browser, never a view of ours — see
                 // `cosmic_pim_auth::flow`.
                 let id = setup::sign_in(&mut store, &plan, |url| open::that_detached(url))?;
@@ -609,6 +614,30 @@ impl AppModel {
     }
 }
 
+/// The account the list already holds for the address and provider `plan`
+/// is about, if there is one.
+///
+/// `setup::add_with_password` and `setup::sign_in` store what they are given
+/// without looking: a second Add for the same address would make a second
+/// account, and every application would sync the same mailbox and calendars
+/// twice.
+fn already_added<'a>(accounts: &'a [Account], plan: &Plan) -> Option<&'a Account> {
+    let address = plan.address.trim();
+    let provider = plan.provider.as_ref().map(|provider| provider.id.as_str());
+    accounts.iter().find(|account| {
+        account.username.trim().eq_ignore_ascii_case(address)
+            && account.provider.as_deref() == provider
+    })
+}
+
+/// [`already_added`] as the reason not to go on.
+fn refuse_a_second(store: &AccountStore, plan: &Plan) -> Result<(), AddFailure> {
+    match already_added(store.accounts(), plan) {
+        Some(account) => Err(AddFailure::Exists(account.display_name.clone())),
+        None => Ok(()),
+    }
+}
+
 /// What an account that has just been added looks like to the list.
 fn added(store: &AccountStore, id: &str) -> (Vec<Account>, String) {
     let name = store
@@ -884,6 +913,7 @@ impl cosmic::Application for AppModel {
                         },
                         AddFailure::Unreachable(reason) => fl!("unreachable", reason = reason),
                         AddFailure::NoServer => fl!("no-server"),
+                        AddFailure::Exists(name) => fl!("already-added", name = name),
                         AddFailure::Other(reason) => reason,
                     });
                 }
@@ -1013,6 +1043,44 @@ mod tests {
         assert!(matches!(app.page, Page::List));
         assert_eq!(app.accounts.len(), 1);
         assert!(app.notice.as_deref().unwrap().contains("Ada at Fastmail"));
+    }
+
+    #[test]
+    fn an_address_already_in_the_list_is_found_whatever_its_case() {
+        let registry = Registry::load_from(std::path::Path::new("/nonexistent"));
+        let fastmail = registry
+            .get("fastmail")
+            .unwrap()
+            .account_for("ada@fastmail.com");
+        let elsewhere = Account::new("Work", "", "ada@example.org");
+        let accounts = [elsewhere, fastmail];
+
+        let again = setup::plan(&registry, "Ada@Fastmail.com", false).unwrap();
+        let other = setup::plan(&registry, "grace@fastmail.com", false).unwrap();
+
+        assert_eq!(
+            already_added(&accounts, &again).map(|a| a.username.as_str()),
+            Some("ada@fastmail.com")
+        );
+        assert!(already_added(&accounts, &other).is_none());
+    }
+
+    #[test]
+    fn adding_an_address_twice_says_where_it_already_is() {
+        let mut app = app();
+        let _ = app.update(Message::ShowAdd(None));
+        let _ = app.update(Message::Address("ada@fastmail.com".into()));
+        if let Page::Add(form) = &mut app.page {
+            form.busy = Some(Busy::Checking);
+        }
+
+        let _ = app.update(Message::Added(Err(AddFailure::Exists("Fastmail".into()))));
+
+        let form = form(&app);
+        assert_eq!(form.busy, None);
+        let error = form.error.as_deref().unwrap();
+        assert!(error.contains("Fastmail"), "{error}");
+        assert!(error.contains("already"), "{error}");
     }
 
     #[test]
