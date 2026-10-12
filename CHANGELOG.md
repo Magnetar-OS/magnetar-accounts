@@ -22,5 +22,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `list` and `adopt` on the command line.
 - A welcome at a new user's first login, from an autostart entry: the add
   page, once, and only when there is no account yet.
+- Accounts added or removed in GNOME Online Accounts follow into the list in
+  the background, from an autostart entry (`watch`), without this window being
+  opened. Without Online Accounts installed it does nothing.
 - An address already in the list, for the same provider, is not added a
   second time; the page says which account it already is.

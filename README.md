@@ -32,16 +32,23 @@ magnetar-accounts --add             the window, on the add page
 magnetar-accounts --for=mail        ...saying which application asked (mail, calendar, contacts)
 magnetar-accounts list              every account and what it brings
 magnetar-accounts adopt             link what GNOME Online Accounts holds
+magnetar-accounts watch             ...and keep linking it as it changes
 magnetar-accounts --first-run       the welcome at a new user's first login
 ```
 
 An application with no account opens `magnetar-accounts --for=<service>` from
 its first-run page. A second launch raises the window already open.
 
-A welcome ships as an autostart entry in `/etc/xdg/autostart`:
-`--first-run` opens the add page once, at a new user's first login, and only
-if there is no account yet. It never comes back, whether an account was
-added or the window was closed.
+Two autostart entries ship in `/etc/xdg/autostart`:
+
+- **`--first-run`** opens the add page once, at a new user's first login, and
+  only if there is no account yet. It never comes back, whether an account was
+  added or the window was closed.
+- **`watch`** links what GNOME Online Accounts holds at login, then again
+  whenever an account is added or removed there, so an account added in
+  GNOME's own window reaches the applications without this one being opened.
+  Where Online Accounts is not installed it exits at once and does nothing;
+  where it is installed but not yet running it waits, and never starts it.
 
 GNOME Online Accounts (`gnome-online-accounts`, and `gnome-online-accounts-gtk`
 for its window outside GNOME) is optional: without it, every other way in

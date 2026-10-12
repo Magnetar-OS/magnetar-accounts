@@ -18,8 +18,10 @@ cargo-target-dir := env('CARGO_TARGET_DIR', 'target')
 # by a build script: `xdgen` as a build dependency re-resolves the graph and
 # drops zbus's `blocking` feature, which single-instance needs.
 desktop-src := 'resources' / (appid + '.desktop')
-# The autostart entry for the welcome at a new user's first login.
+# The two autostart entries: the welcome at a new user's first login, and the
+# background link to GNOME Online Accounts.
 first-run-src := 'resources' / (appid + '.FirstRun.desktop')
+watch-src := 'resources' / (appid + '.Watch.desktop')
 metainfo-src := 'resources' / (appid + '.metainfo.xml')
 icon-dir := 'resources' / 'icons' / 'hicolor'
 icon-src := icon-dir / 'scalable' / 'apps' / (appid + '.svg')
@@ -33,10 +35,11 @@ base-dir := absolute_path(clean(rootdir / prefix))
 bin-dst := base-dir / 'bin' / name
 desktop-dst := base-dir / 'share' / 'applications' / (appid + '.desktop')
 # In /etc/xdg/autostart, where the session looks, as grabit's entry is; the
-# package carries /etc as a second tree for it (packaging/linux/nfpm.yaml).
-# A per-user install puts it where a per-user session looks instead.
+# package carries /etc as a second tree for them (packaging/linux/nfpm.yaml).
+# A per-user install puts them where a per-user session looks instead.
 autostart-dir := if prefix == '/usr' { absolute_path(clean(rootdir / 'etc')) / 'xdg' / 'autostart' } else { config_directory() / 'autostart' }
 first-run-dst := autostart-dir / (appid + '.FirstRun.desktop')
+watch-dst := autostart-dir / (appid + '.Watch.desktop')
 metainfo-dst := base-dir / 'share' / 'metainfo' / (appid + '.metainfo.xml')
 icons-dst := base-dir / 'share' / 'icons' / 'hicolor'
 icon-svg-dst := icons-dst / 'scalable' / 'apps' / (appid + '.svg')
@@ -102,7 +105,7 @@ validate-metadata:
     # the platform matters more than the older validator, so that one error is
     # tolerated and every other error still fails the recipe. Same rule as
     # circle's, slate's and pencil's `validate-metadata`.
-    for entry in {{desktop-src}} {{first-run-src}}; do
+    for entry in {{desktop-src}} {{first-run-src}} {{watch-src}}; do
         output=$(desktop-file-validate "$entry" 2>&1 || true)
         [ -n "$output" ] && printf '%s\n' "$output"
         if printf '%s\n' "$output" | grep 'error:' | grep -qv 'unregistered value "COSMIC"'; then
@@ -145,6 +148,7 @@ install:
     install -Dm0755 {{ cargo-target-dir / 'release' / name }} {{bin-dst}}
     install -Dm0644 {{desktop-src}} {{desktop-dst}}
     install -Dm0644 {{first-run-src}} {{first-run-dst}}
+    install -Dm0644 {{watch-src}} {{watch-dst}}
     install -Dm0644 {{metainfo-src}} {{metainfo-dst}}
     install -Dm0644 {{icon-src}} {{icon-svg-dst}}
     install -Dm0644 {{icon-symbolic-src}} {{icon-symbolic-dst}}
@@ -159,7 +163,7 @@ install:
 
 # Uninstalls installed files
 uninstall:
-    rm -f {{bin-dst}} {{desktop-dst}} {{first-run-dst}} {{metainfo-dst}} {{icon-svg-dst}} {{icon-symbolic-dst}}
+    rm -f {{bin-dst}} {{desktop-dst}} {{first-run-dst}} {{watch-dst}} {{metainfo-dst}} {{icon-svg-dst}} {{icon-symbolic-dst}}
     for size in {{icon-sizes}}; do \
         rm -f {{icons-dst}}/$size/apps/{{appid}}.png; \
     done

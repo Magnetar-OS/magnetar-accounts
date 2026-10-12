@@ -149,6 +149,18 @@ impl FakeDaemon {
             .at(&path, account.clone())
             .expect("the account interface");
     }
+
+    /// Removes the account with GOA's id `id`.
+    pub fn remove(&self, id: &str) {
+        let server = self.connection.object_server();
+        let path = Self::path(id);
+        server
+            .remove::<FakeAccount, _>(&path)
+            .expect("the account was there");
+        server
+            .remove::<FakeOAuth2, _>(&path)
+            .expect("its OAuth2 interface was there");
+    }
 }
 
 /// One account as the stand-in daemon presents it.

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Accounts
+Comment=Bring accounts added in GNOME Online Accounts into Envelope, Slate and Circle
+Exec=magnetar-accounts watch
+Icon=com.magnetaros.Accounts
+Terminal=false
+Type=Application
+NoDisplay=true
+X-GNOME-Autostart-Phase=Applications
+# An autostart entry rather than a systemd user unit: the suite's user units
+# (slate-daemon, grabit, locket-daemon) need a `systemctl --user enable` by
+# hand, and this has to work for every user with nobody doing anything.
+# No OnlyShowIn: the suite runs outside COSMIC too. Where GNOME Online
+# Accounts is not installed, `watch` sees that and exits at once.

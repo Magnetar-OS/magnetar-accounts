@@ -19,6 +19,8 @@
 //!                                   ...saying which application asked, and why
 //! magnetar-accounts list            every account and what it brings
 //! magnetar-accounts adopt           link the accounts GNOME Online Accounts holds
+//! magnetar-accounts watch           ...and keep linking them as they change; from
+//!                                   an autostart entry, with no window
 //! magnetar-accounts --first-run     the welcome, once, at a new user's first login
 //! ```
 
@@ -28,6 +30,7 @@ pub mod first_run;
 pub mod i18n;
 #[cfg(test)]
 mod testing;
+pub mod watch;
 
 use std::process::ExitCode;
 
@@ -72,6 +75,8 @@ pub enum Command {
     Window(Request),
     List,
     Adopt,
+    /// Keep linking what Online Accounts holds — from an autostart entry.
+    Watch,
     /// The welcome at a new user's first login — from the autostart entry.
     FirstRun,
 }
@@ -88,6 +93,7 @@ pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Command, String> 
         match arg.as_str() {
             "list" if command.is_none() => command = Some(Command::List),
             "adopt" if command.is_none() => command = Some(Command::Adopt),
+            "watch" if command.is_none() => command = Some(Command::Watch),
             "--first-run" if command.is_none() => command = Some(Command::FirstRun),
             "--add" => request.add = true,
             other => match other.strip_prefix("--for=") {
@@ -125,6 +131,7 @@ pub fn main() -> ExitCode {
     match parse(std::env::args().skip(1)) {
         Ok(Command::List) => cli::list(),
         Ok(Command::Adopt) => cli::adopt(),
+        Ok(Command::Watch) => watch::run(),
         Ok(Command::FirstRun) => match first_run::decide(&first_run::marker(), has_accounts()) {
             first_run::Decision::Welcome => match run(Request {
                 add: true,
@@ -207,6 +214,7 @@ mod tests {
     fn the_command_line_tools_are_words() {
         assert_eq!(parse(&["list"]), Ok(Command::List));
         assert_eq!(parse(&["adopt"]), Ok(Command::Adopt));
+        assert_eq!(parse(&["watch"]), Ok(Command::Watch));
         assert_eq!(parse(&["--first-run"]), Ok(Command::FirstRun));
     }
 

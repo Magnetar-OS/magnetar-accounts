@@ -35,6 +35,10 @@ open = "5.4.4"
 # serialised as JSON, as Slate and Circle do it.
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# The background watch on GNOME Online Accounts: its object manager's
+# signals and the bus's name owner. Already in the graph through
+# cosmic-pim-auth and libcosmic, with these features.
+zbus = { version = "5.19", features = ["blocking-api"] }
 # `spawn_blocking`, for the substrate's blocking calls. Already in the graph
 # through libcosmic's executor.
 tokio = { version = "1.53", features = ["rt"] }
@@ -52,10 +56,6 @@ features = [
 
 [dev-dependencies]
 tempfile = "3"
-# The stand-in GNOME Online Accounts daemon the tests put on a private bus.
-# Already in the graph through cosmic-pim-auth and libcosmic, with these
-# features.
-zbus = { version = "5.19", features = ["blocking-api"] }
 
 [[bin]]
 name = "magnetar-accounts"

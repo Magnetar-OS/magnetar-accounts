@@ -27,8 +27,8 @@ description: |
 # by arch-repo.yml's container install test.
 #
 # GNOME Online Accounts is optional, and declared by what happens without it:
-# the Online Accounts route is not offered, and `adopt` says there is nothing
-# to bring in.
+# the Online Accounts route is not offered, `adopt` says there is nothing to
+# bring in, and the background `watch` exits at login having done nothing.
 # `gnome-online-accounts` is the daemon that holds the sign-ins;
 # `gnome-online-accounts-gtk` is its window outside GNOME, which this app
 # opens for adding one. Suggested, not recommended: on Debian a recommendation
@@ -74,7 +74,8 @@ contents:
   - src: .release-kit/pkgroot/usr
     dst: /usr
     type: tree
-  # The first-login welcome's autostart entry, in /etc/xdg/autostart.
+  # The two autostart entries, in /etc/xdg/autostart: the first-login
+  # welcome and the background link to GNOME Online Accounts.
   - src: .release-kit/pkgroot/etc
     dst: /etc
     type: tree
