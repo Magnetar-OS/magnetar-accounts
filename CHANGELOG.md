@@ -6,6 +6,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-13
+
 ### Added
 
 - The window: the accounts there are, what each brings to Envelope, Slate and
@@ -28,3 +30,6 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - An address already in the list, for the same provider, is not added a
   second time; the page says which account it already is.
 - Greek translation.
+
+[Unreleased]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Magnetar-OS/magnetar-accounts/releases/tag/v0.1.0
