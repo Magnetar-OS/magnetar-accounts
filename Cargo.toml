@@ -8,7 +8,7 @@ edition = "2024"
 license = "GPL-3.0-only"
 description = "Online accounts for the COSMIC desktop: sign in once, and mail, calendars and contacts follow"
 repository = "https://github.com/Magnetar-OS/magnetar-accounts"
-rust-version = "1.99.0"
+rust-version = "1.99.1"
 # An application, shipped through Magnetar packaging. It links libcosmic from
 # git, which crates.io refuses.
 publish = false
