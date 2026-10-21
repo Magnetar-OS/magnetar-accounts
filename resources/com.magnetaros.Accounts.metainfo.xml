@@ -56,7 +56,7 @@
     <color type="primary" scheme_preference="dark">#1f8a9e</color>
   </branding>
   <releases>
-    <release version="0.1.0" date="2026-09-30"> <!-- x-release-kit-version-date -->
+    <release version="0.2.0" date="2026-10-21"> <!-- x-release-kit-version-date -->
       <description>
         <p>First release: adding accounts by address, by password, in the browser, and through GNOME Online Accounts.</p>
       </description>

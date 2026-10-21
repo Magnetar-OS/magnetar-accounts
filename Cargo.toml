@@ -1,6 +1,6 @@
 [package]
 name = "magnetar-accounts"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 # GPL-3.0-only for the application; the shared substrate (cosmic-pim) is
 # MPL-2.0 and is linked, not absorbed — the same split as Envelope, Slate and
