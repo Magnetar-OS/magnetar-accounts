@@ -17,13 +17,13 @@ publish = false
 # The substrate does the work: which provider an address belongs to, how it
 # signs in, trying a password before storing it, the browser sign-in, and
 # GNOME Online Accounts. This crate is the window over it.
-cosmic-pim-accounts = "3"
-cosmic-pim-auth = "3"
+cosmic-pim-accounts = "4"
+cosmic-pim-auth = "4"
 # With its default `mail` feature: autodiscovery and trying a mail login are
 # the heart of adding an account, and this is the one application that does
 # it for the whole suite — which is what keeps the mail stack out of Slate
 # and Circle.
-cosmic-pim-sync = "3"
+cosmic-pim-sync = "4"
 
 i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
 i18n-embed-fl = "0.10"

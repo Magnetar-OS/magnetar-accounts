@@ -6,6 +6,10 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Built on cosmic-pim 4 (mail-parser 1.0, rusqlite 0.41).
+
 ## [0.2.1] - 2026-11-01
 
 ### Changed
