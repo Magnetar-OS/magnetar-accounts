@@ -6,6 +6,11 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Built on cosmic-ext-widgets 1.3.1 and the latest releases of its
+  dependencies: tokio 1.54, open 5.4.5 and rust-embed 8.13.
+
 ## [0.2.3] - 2026-11-01
 
 ### Fixed
