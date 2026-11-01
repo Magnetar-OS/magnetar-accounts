@@ -4449,7 +4449,7 @@ dependencies = [
 
 [[package]]
 name = "magnetar-accounts"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "cosmic-ext-widgets",
  "cosmic-pim-accounts",
