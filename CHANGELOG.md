@@ -6,6 +6,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-01
+
 ### Fixed
 
 - The About button in the header bar is drawn whole at Spacious interface
@@ -60,7 +62,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   second time; the page says which account it already is.
 - Greek translation.
 
-[Unreleased]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.1.0...v0.2.0
