@@ -43,6 +43,11 @@ zbus = { version = "5.19", features = ["blocking-api"] }
 # through libcosmic's executor.
 tokio = { version = "1.53", features = ["rt"] }
 
+# `header_button`: a header-bar icon button that is not cut off at Spacious
+# density, as libcosmic's `button::icon` is. Consumed by tag; it unifies
+# with this crate's own libcosmic.
+cosmic-ext-widgets = { git = "https://github.com/Magnetar-OS/cosmic-ext-widgets.git", tag = "v1.2.0" }
+
 [dependencies.libcosmic]
 git = "https://github.com/pop-os/libcosmic.git"
 features = [

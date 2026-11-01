@@ -15,6 +15,7 @@ use cosmic::app::{Core, Task, context_drawer};
 use cosmic::iced::{Alignment, Length, Subscription};
 use cosmic::prelude::*;
 use cosmic::widget::{self, about::About};
+use cosmic_ext_widgets::header_button;
 use cosmic_pim_accounts::{Account, AccountStore, Registry};
 use cosmic_pim_auth::OnlineAccounts;
 use cosmic_pim_sync::setup::{self, Plan, Route, Services, SetupError};
@@ -783,9 +784,18 @@ impl cosmic::Application for AppModel {
 
     fn header_end(&self) -> Vec<Element<'_, Self::Message>> {
         vec![
-            widget::button::icon(widget::icon::from_name("help-about-symbolic"))
-                .on_press(Message::ToggleAbout)
-                .into(),
+            header_button(
+                widget::icon::from_name("help-about-symbolic"),
+                fl!("about"),
+                Message::ToggleAbout,
+            )
+            .focused(
+                self.core
+                    .focus_chain()
+                    .iter()
+                    .any(|id| Some(*id) == self.core.main_window_id()),
+            )
+            .into(),
         ]
     }
 

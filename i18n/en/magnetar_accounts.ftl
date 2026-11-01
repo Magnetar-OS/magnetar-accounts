@@ -2,6 +2,8 @@ app-title = Accounts
 # Also the desktop entry's Comment and the AppStream summary.
 app-comment = Sign in once, and mail, calendars and contacts follow
 repository = Repository
+# The header button's tooltip and accessible name.
+about = About Accounts
 
 ## The list
 

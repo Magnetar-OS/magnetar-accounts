@@ -6,6 +6,13 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- The About button in the header bar is drawn whole at Spacious interface
+  density; the header used to cut off its top half. It has a tooltip and an
+  accessible name now, and dims with the window controls when the window is
+  not focused.
+
 ## [0.2.2] - 2026-11-01
 
 ### Changed
