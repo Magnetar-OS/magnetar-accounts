@@ -3,11 +3,13 @@
 //! A private session bus with a stand-in GNOME Online Accounts daemon on it,
 //! so the code that talks to the daemon is exercised over a real bus without
 //! touching the user's session or their accounts.
+//!
+//! Called from plain test threads, never from an async task, so each bus
+//! call is driven to its end with [`zbus::block_on`].
 
 use std::io::BufRead as _;
 
-use zbus::blocking::Connection;
-use zbus::zvariant::OwnedObjectPath;
+use zbus::{Connection, OwnedObjectPath};
 
 const BUS: &str = "org.gnome.OnlineAccounts";
 const ROOT: &str = "/org/gnome/OnlineAccounts";
@@ -87,29 +89,24 @@ impl PrivateBus {
 
     /// A new connection to this bus.
     pub fn connect(&self) -> Connection {
-        zbus::blocking::connection::Builder::address(self.address.as_str())
-            .expect("a valid bus address")
-            .build()
+        zbus::block_on(zbus::connection::Builder::address(self.address.as_str()).build())
             .expect("connecting to the private bus")
     }
 
     /// Puts a stand-in daemon on the bus holding `accounts`. Dropping it takes
     /// the daemon off the bus.
     pub fn serve(&self, accounts: &[FakeAccount]) -> FakeDaemon {
-        let connection = zbus::blocking::connection::Builder::address(self.address.as_str())
-            .expect("a valid bus address")
-            .serve_at(ROOT, zbus::fdo::ObjectManager)
-            .expect("the object manager")
-            .build()
-            .expect("the stand-in daemon");
+        let connection = zbus::block_on(
+            zbus::connection::Builder::address(self.address.as_str())
+                .serve_at(ROOT, zbus::fdo::ObjectManager)
+                .build(),
+        )
+        .expect("the stand-in daemon");
         let daemon = FakeDaemon { connection };
         for account in accounts {
             daemon.add(account);
         }
-        daemon
-            .connection
-            .request_name(BUS)
-            .expect("the Online Accounts name");
+        zbus::block_on(daemon.connection.request_name(BUS)).expect("the Online Accounts name");
         daemon
     }
 }
@@ -137,28 +134,22 @@ impl FakeDaemon {
     pub fn add(&self, account: &FakeAccount) {
         let server = self.connection.object_server();
         let path = Self::path(&account.id);
-        server
-            .at(
-                &path,
-                FakeOAuth2 {
-                    token: format!("token-for-{}", account.id),
-                },
-            )
-            .expect("the OAuth2 interface");
-        server
-            .at(&path, account.clone())
-            .expect("the account interface");
+        zbus::block_on(server.at(
+            &path,
+            FakeOAuth2 {
+                token: format!("token-for-{}", account.id),
+            },
+        ))
+        .expect("the OAuth2 interface");
+        zbus::block_on(server.at(&path, account.clone())).expect("the account interface");
     }
 
     /// Removes the account with GOA's id `id`.
     pub fn remove(&self, id: &str) {
         let server = self.connection.object_server();
         let path = Self::path(id);
-        server
-            .remove::<FakeAccount, _>(&path)
-            .expect("the account was there");
-        server
-            .remove::<FakeOAuth2, _>(&path)
+        zbus::block_on(server.remove::<FakeAccount, _>(&path)).expect("the account was there");
+        zbus::block_on(server.remove::<FakeOAuth2, _>(&path))
             .expect("its OAuth2 interface was there");
     }
 }

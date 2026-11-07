@@ -17,13 +17,13 @@ publish = false
 # The substrate does the work: which provider an address belongs to, how it
 # signs in, trying a password before storing it, the browser sign-in, and
 # GNOME Online Accounts. This crate is the window over it.
-cosmic-pim-accounts = "4"
-cosmic-pim-auth = "4"
+cosmic-pim-accounts = "5"
+cosmic-pim-auth = "5"
 # With its default `mail` feature: autodiscovery and trying a mail login are
 # the heart of adding an account, and this is the one application that does
 # it for the whole suite — which is what keeps the mail stack out of Slate
 # and Circle.
-cosmic-pim-sync = "4"
+cosmic-pim-sync = "5"
 
 i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
 i18n-embed-fl = "0.10"
@@ -38,7 +38,10 @@ serde_json = "1"
 # The background watch on GNOME Online Accounts: its object manager's
 # signals and the bus's name owner. Already in the graph through
 # cosmic-pim-auth and libcosmic, with these features.
-zbus = { version = "5.19", features = ["blocking-api"] }
+zbus = "6.2"
+# `StreamExt::next`, to read those signals off zbus's message stream. Already
+# in the graph through libcosmic and reqwest.
+futures-util = { version = "0.3.34", default-features = false }
 # `spawn_blocking`, for the substrate's blocking calls. Already in the graph
 # through libcosmic's executor.
 tokio = { version = "1.54", features = ["rt"] }

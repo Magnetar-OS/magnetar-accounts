@@ -6,6 +6,11 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Built on zbus 6 and cosmic-pim 5, as libcosmic now is. The background Online
+  Accounts watch works as before.
+
 ## [0.2.4] - 2026-11-01
 
 ### Changed

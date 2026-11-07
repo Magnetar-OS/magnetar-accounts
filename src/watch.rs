@@ -35,10 +35,10 @@ use std::time::Duration;
 use cosmic_pim_accounts::{AccountStore, Registry};
 use cosmic_pim_auth::OnlineAccounts;
 use cosmic_pim_sync::setup::{self, Adopted, SetupError};
-use zbus::MatchRule;
-use zbus::blocking::fdo::DBusProxy;
-use zbus::blocking::{Connection, MessageIterator};
+use futures_util::StreamExt as _;
+use zbus::fdo::DBusProxy;
 use zbus::names::BusName;
+use zbus::{Connection, MatchRule, MessageStream};
 
 const BUS: &str = "org.gnome.OnlineAccounts";
 const ROOT: &str = "/org/gnome/OnlineAccounts";
@@ -61,7 +61,7 @@ pub enum Ended {
 /// Runs the watcher on the session bus until there is nothing left to watch.
 #[must_use]
 pub fn run() -> ExitCode {
-    let connection = match Connection::session() {
+    let connection = match zbus::block_on(Connection::session()) {
         Ok(connection) => connection,
         Err(why) => {
             eprintln!("magnetar-accounts: the session bus could not be reached: {why}");
@@ -108,6 +108,10 @@ fn report(result: Result<Adopted, SetupError>) {
 /// first seen and once after every burst of changes, until it is gone for
 /// good or the bus closes.
 ///
+/// Blocks the calling thread, which must not be an async task's: each
+/// question to the bus is driven to its answer with [`zbus::block_on`], and
+/// `adopt` is called outside any of them, so it may block on the bus too.
+///
 /// # Errors
 ///
 /// When the bus refuses the subscriptions or a question about who owns a
@@ -116,11 +120,11 @@ pub fn watch(
     connection: &Connection,
     mut adopt: impl FnMut(&OnlineAccounts),
 ) -> zbus::Result<Ended> {
-    let bus = DBusProxy::new(connection)?;
+    let bus = zbus::block_on(DBusProxy::new(connection))?;
     let name = BusName::try_from(BUS)?;
+    let running = || zbus::block_on(bus.name_has_owner(name.clone()));
     let installed = || -> zbus::Result<bool> {
-        Ok(bus
-            .list_activatable_names()?
+        Ok(zbus::block_on(bus.list_activatable_names())?
             .iter()
             .any(|activatable| activatable.as_str() == BUS))
     };
@@ -129,12 +133,12 @@ pub fn watch(
     // subscription is not missed.
     let changes = subscribe(connection)?;
 
-    if !bus.name_has_owner(name.clone())? && !installed()? {
+    if !running()? && !installed()? {
         return Ok(Ended::NotInstalled);
     }
 
     loop {
-        if bus.name_has_owner(name.clone())? {
+        if running()? {
             if let Some(service) = OnlineAccounts::on(connection.clone())
                 .map_err(|why| zbus::Error::Failure(why.to_string()))?
             {
@@ -153,34 +157,37 @@ pub fn watch(
 }
 
 /// The signals that mean the accounts may have changed, as one channel. Each
-/// subscription is drained on a thread of its own; the channel closes when
-/// both have ended, which is when the bus has gone.
+/// subscription is drained on a thread of its own, blocked in
+/// [`zbus::block_on`] on its stream; the channel closes when both have
+/// ended, which is when the bus has gone.
 fn subscribe(connection: &Connection) -> zbus::Result<mpsc::Receiver<()>> {
     let accounts = MatchRule::builder()
         .msg_type(zbus::message::Type::Signal)
-        .interface(OBJECT_MANAGER)?
-        .path(ROOT)?
-        .build();
+        .interface(OBJECT_MANAGER)
+        .path(ROOT)
+        .build()?;
     let owner = MatchRule::builder()
         .msg_type(zbus::message::Type::Signal)
-        .sender("org.freedesktop.DBus")?
-        .interface("org.freedesktop.DBus")?
-        .member("NameOwnerChanged")?
-        .add_arg(BUS)?
-        .build();
+        .sender("org.freedesktop.DBus")
+        .interface("org.freedesktop.DBus")
+        .member("NameOwnerChanged")
+        .add_arg(BUS)
+        .build()?;
 
     let (sender, receiver) = mpsc::channel();
     for rule in [accounts, owner] {
-        let messages = MessageIterator::for_match_rule(rule, connection, None)?;
+        let mut messages = zbus::block_on(MessageStream::for_match_rule(rule, connection, None))?;
         let sender = sender.clone();
         std::thread::Builder::new()
             .name("online-accounts-signals".to_owned())
             .spawn(move || {
-                for message in messages {
-                    if message.is_err() || sender.send(()).is_err() {
-                        break;
+                zbus::block_on(async {
+                    while let Some(message) = messages.next().await {
+                        if message.is_err() || sender.send(()).is_err() {
+                            break;
+                        }
                     }
-                }
+                });
             })
             .map_err(|why| zbus::Error::Failure(why.to_string()))?;
     }
