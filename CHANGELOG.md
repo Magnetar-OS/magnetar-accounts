@@ -6,6 +6,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-11-07
+
 ### Changed
 
 - Rebuilt against the current COSMIC libraries (libcosmic `dd108aa`).
@@ -75,7 +77,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   second time; the page says which account it already is.
 - Greek translation.
 
-[Unreleased]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/Magnetar-OS/magnetar-accounts/compare/v0.2.1...v0.2.2
