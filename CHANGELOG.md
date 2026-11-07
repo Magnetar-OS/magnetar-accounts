@@ -8,6 +8,7 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Rebuilt against the current COSMIC libraries (libcosmic `dd108aa`).
 - Built on zbus 6 and cosmic-pim 5, as libcosmic now is. The background Online
   Accounts watch works as before.
 
