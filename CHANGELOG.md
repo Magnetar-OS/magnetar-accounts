@@ -8,6 +8,7 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Rebuilt against the current COSMIC libraries (libcosmic `be7937d`).
 - Built with Rust 1.100.0, now the minimum supported version (was 1.99.1).
 - Built on cosmic-pim 6 and zbus 6.5.
 
