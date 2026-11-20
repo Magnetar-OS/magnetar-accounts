@@ -8,7 +8,7 @@ edition = "2024"
 license = "GPL-3.0-only"
 description = "Online accounts for the COSMIC desktop: sign in once, and mail, calendars and contacts follow"
 repository = "https://github.com/Magnetar-OS/magnetar-accounts"
-rust-version = "1.99.1"
+rust-version = "1.100.0"
 # An application, shipped through Magnetar packaging. It links libcosmic from
 # git, which crates.io refuses.
 publish = false
@@ -17,17 +17,17 @@ publish = false
 # The substrate does the work: which provider an address belongs to, how it
 # signs in, trying a password before storing it, the browser sign-in, and
 # GNOME Online Accounts. This crate is the window over it.
-cosmic-pim-accounts = "5"
-cosmic-pim-auth = "5"
+cosmic-pim-accounts = "6"
+cosmic-pim-auth = "6"
 # With its default `mail` feature: autodiscovery and trying a mail login are
 # the heart of adding an account, and this is the one application that does
 # it for the whole suite — which is what keeps the mail stack out of Slate
 # and Circle.
-cosmic-pim-sync = "5"
+cosmic-pim-sync = "6"
 
 i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
 i18n-embed-fl = "0.10"
-rust-embed = "8.13"
+rust-embed = "8.14"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 open = "5.4.5"
@@ -38,7 +38,7 @@ serde_json = "1"
 # The background watch on GNOME Online Accounts: its object manager's
 # signals and the bus's name owner. Already in the graph through
 # cosmic-pim-auth and libcosmic, with these features.
-zbus = "6.2"
+zbus = "6.5"
 # `StreamExt::next`, to read those signals off zbus's message stream. Already
 # in the graph through libcosmic and reqwest.
 futures-util = { version = "0.3.34", default-features = false }
@@ -49,7 +49,7 @@ tokio = { version = "1.54", features = ["rt"] }
 # `header_button`: a header-bar icon button that is not cut off at Spacious
 # density, as libcosmic's `button::icon` is. Consumed by tag; it unifies
 # with this crate's own libcosmic.
-cosmic-ext-widgets = { git = "https://github.com/Magnetar-OS/cosmic-ext-widgets.git", tag = "v1.3.1" }
+cosmic-ext-widgets = { git = "https://github.com/Magnetar-OS/cosmic-ext-widgets.git", tag = "v1.3.2" }
 
 [dependencies.libcosmic]
 git = "https://github.com/pop-os/libcosmic.git"

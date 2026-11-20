@@ -11,7 +11,6 @@ use cosmic_pim_auth::OnlineAccounts;
 use cosmic_pim_sync::setup::{self, Services};
 
 /// Prints every account and what it brings. Never a secret.
-#[must_use]
 pub fn list() -> ExitCode {
     let store = match AccountStore::open_default() {
         Ok(store) => store,
@@ -72,7 +71,6 @@ pub fn describe(services: Services) -> String {
 
 /// Links the accounts GNOME Online Accounts holds, and forgets the ones it
 /// no longer does.
-#[must_use]
 pub fn adopt() -> ExitCode {
     adopt_from(
         OnlineAccounts::connect(),

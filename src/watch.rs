@@ -59,7 +59,6 @@ pub enum Ended {
 }
 
 /// Runs the watcher on the session bus until there is nothing left to watch.
-#[must_use]
 pub fn run() -> ExitCode {
     let connection = match zbus::block_on(Connection::session()) {
         Ok(connection) => connection,

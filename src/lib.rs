@@ -116,7 +116,6 @@ pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Command, String> 
 }
 
 /// Runs whatever the command line asked for.
-#[must_use]
 pub fn main() -> ExitCode {
     tracing_subscriber::fmt()
         .with_env_filter(
