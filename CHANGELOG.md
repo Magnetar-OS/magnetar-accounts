@@ -6,6 +6,11 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Built with Rust 1.100.1, now the minimum supported version (was 1.100.0).
+- Built on cosmic-pim 7.
+
 ## [0.2.6] - 2026-11-20
 
 ### Changed
